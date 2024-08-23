@@ -4,25 +4,38 @@ from discord.ext import commands
 import pandas as pd
 import math
 import json
+import logging
 from difflib import get_close_matches
+import threading
 
-# config.json ファイルから設定を読み込む
-with open('config.json', 'r', encoding='utf-8') as config_file:
-    config = json.load(config_file)
+# ログ設定
+logging.basicConfig(filename='bot.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Discordトークンを設定
-TOKEN = config['DISCORD_BOT_TOKEN']
+# グローバル変数
+config = None
+EXCEL_FILE_PATH = None
+SPECIAL_ITEMS = None
 
-# Botの設定
-intents = discord.Intents.default()
-intents.message_content = True
-bot = commands.Bot(command_prefix='/', intents=intents)
+def load_config():
+    global config, EXCEL_FILE_PATH, SPECIAL_ITEMS
+    try:
+        with open('config.json', 'r', encoding='utf-8') as config_file:
+            config = json.load(config_file)
+            EXCEL_FILE_PATH = config['EXCEL_FILE_PATH']
+            SPECIAL_ITEMS = config['SPECIAL_ITEMS']
+            logging.info("設定ファイルが再読み込みされました。")
+    except Exception as e:
+        logging.error(f"設定ファイルの再読み込み中にエラーが発生しました: {e}")
 
-# Excelファイルのパス
-EXCEL_FILE_PATH = config['EXCEL_FILE_PATH']
-
-# 特定のアイテムリスト
-SPECIAL_ITEMS = config['SPECIAL_ITEMS']
+def save_config(new_config):
+    global config
+    try:
+        with open('config.json', 'w', encoding='utf-8') as config_file:
+            json.dump(new_config, config_file, ensure_ascii=False, indent=4)
+            config = new_config
+            logging.info("設定ファイルが更新されました。")
+    except Exception as e:
+        logging.error(f"設定ファイルの更新中にエラーが発生しました: {e}")
 
 def load_crafting_data():
     try:
@@ -30,7 +43,7 @@ def load_crafting_data():
         df = pd.read_excel(EXCEL_FILE_PATH)
         return df
     except Exception as e:
-        print(f"Error loading Excel file: {e}")
+        logging.error(f"Excelファイルの読み込み中にエラーが発生しました: {e}")
         return pd.DataFrame()
 
 def calculate_materials(materials, df):
@@ -79,6 +92,16 @@ def calculate_materials(materials, df):
 
     return final_materials
 
+# Botの設定
+intents = discord.Intents.default()
+intents.message_content = True
+bot = commands.Bot(command_prefix='!', intents=intents)
+
+@bot.event
+async def on_ready():
+    logging.info(f'ログインしました: {bot.user.name} ({bot.user.id})')
+    await bot.tree.sync()
+
 @bot.tree.command(name='materials', description='Calculate the total amount of materials needed')
 @app_commands.describe(materials='List of materials and their quantities in the format "Material:Quantity,Material:Quantity" (e.g., "剛力の宝薬G2:9,魔匠の薬液:3")')
 async def materials(interaction: discord.Interaction, materials: str):
@@ -89,6 +112,7 @@ async def materials(interaction: discord.Interaction, materials: str):
             materials_dict[item] = int(qty)
     except Exception as e:
         await interaction.response.send_message("エラー: コマンドの形式が正しくありません。例: /materials 剛力の宝薬G2:9,魔匠の薬液:3")
+        logging.error(f"材料コマンドの形式エラー: {e}")
         return
 
     df = load_crafting_data()
@@ -129,7 +153,6 @@ async def materials(interaction: discord.Interaction, materials: str):
     material_dict = {}
     
     # 各行を分解して辞書に追加
-
     for line in lines:
         # 空白を取り除き、':'で分割
         key, value = line.strip().split(':')
@@ -160,9 +183,36 @@ async def help_command(interaction: discord.Interaction):
         "例: /materials 剛力の宝薬G2:9,魔匠の薬液:3\n\n"
         "このコマンドを使用すると、指定した材料の総量を計算し、結果を返します。\n"
         "\n"
-        "Please make sure to format your input as 'Material:Quantity,Material:Quantity'."
+        "**Terminal Commands**\n"
+        "reload_config - Reload the configuration file.\n"
+        "show_config - Display the current configuration.\n"
+        "update_config <new_config> - Update the configuration with the provided JSON.\n"
+        "exit - Exit the terminal command interface.\n"
     )
     await interaction.response.send_message(help_message)
 
-# ボットの起動
-bot.run(TOKEN)
+def handle_terminal_commands():
+    def terminal_commands():
+        while True:
+            command = input("コマンドを入力してください (reload_config, show_config, update_config <new_config>, exit): \n")
+            if command.strip() == "reload_config":
+                load_config()
+                print(f"設定の読み込みなおしました。")
+            elif command.strip() == "show_config":
+                print(json.dumps(config, indent=4, ensure_ascii=False))
+            elif command.startswith("update_config"):
+                try:
+                    new_config = json.loads(command[len("update_config"):].strip())
+                    save_config(new_config)
+                except Exception as e:
+                    print(f"エラー: 設定の更新中に問題が発生しました - {e}")
+            elif command.strip() == "exit":
+                break
+            else:
+                print("無効なコマンドです。再度入力してください。")
+    threading.Thread(target=terminal_commands, daemon=True).start()
+
+if __name__ == "__main__":
+    load_config()
+    handle_terminal_commands()
+    bot.run(config['DISCORD_BOT_TOKEN'])
