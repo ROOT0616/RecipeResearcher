@@ -1,57 +1,48 @@
+
 # RecipeResearcherBot
 
-## 概要
+RecipeResearcherBot is a Discord bot designed to help players of Final Fantasy XIV (FF14) calculate crafting materials needed for various items. The bot uses an Excel file to retrieve crafting recipes and outputs the total number of materials required based on user input.
 
-RecipeResearcherBotは、FF14のクラフト材料を計算するためのDiscordボットです。このボットは、ユーザーが指定した材料の量に基づいて、必要な材料の総量を計算し、結果をDiscordチャンネルに返します。
+## Features
 
-## 主な機能
+- **/materials [item_name:quantity]**: Calculates the total amount of materials needed for the specified items and quantities.
+- **/search_item [item_name]**: Searches for a crafting item and displays its materials (up to 8 materials supported).
+- **/mathelp**: Displays the list of available commands.
+- Supports up to 8 materials per item.
+- Logs bot activities including errors and command usage to a log file.
+- Handles Excel file reloading and configuration updates via terminal commands.
 
-- **/materials コマンド**: ユーザーが指定した材料とその数量に基づいて、必要な材料の総量を計算し、結果を返します。
-- **/mathelp コマンド**: 使用可能なコマンドのリストとその説明を表示します。
+## Usage
 
-## 使い方
+### Discord Commands
+- **/materials [item_name:quantity]**: Calculates the total amount of materials needed for specified items. Example: `/materials 剛力の宝薬G2:9,魔匠の薬液:3`.
+- **/search_item [item_name]**: Searches for a crafting item and displays its materials. Example: `/search_item クラロウォルナット・スピア`.
+- **/mathelp**: Displays help information about the available commands.
 
-1. **ボットのセットアップ**
-   - `config.json` ファイルに必要な設定を追加します。
-   - `DISCORD_BOT_TOKEN`: Discordボットのトークンを設定します。
-   - `EXCEL_FILE_PATH`: 材料データが含まれるExcelファイルへのパスを設定します。
-   - `SPECIAL_ITEMS`: 特定のアイテムリストを設定します。
+### Terminal Commands
+- **reload_config**: Reloads the bot's configuration from the `config.json` file.
+- **show_config**: Displays the current configuration in JSON format.
+- **update_config <new_config>**: Updates the `config.json` with new configuration values.
+- **exit**: Shuts down the bot.
 
-2. **Excelファイルの構成**
-   - `crafting_data.xlsx` ファイルには、以下のカラムが含まれます:
-     - `完成品名`: 完成品の名前
-     - `完成個数`: 1回のレシピで完成する個数
-     - `材料1`, `材料2`, `材料3`: 使用される材料の名前
-     - `必要数1`, `必要数2`, `必要数3`: 各材料の必要数量
+## Installation
 
-3. **ボットの起動**
-   - Pythonスクリプトを実行してボットを起動します。
+1. Install the required Python packages using `pip`:
+   ```bash
+   pip install discord.py pandas openpyxl
+   ```
+2. Add your bot token to the `config.json` file.
+3. Run the bot using:
+   ```bash
+   python RecipeResearcherBot.py
+   ```
 
-```bash
-python RecipeResearcher.py
-```
+## Configuration
 
-4. **コマンドの使用**
-   - /materials [材料名:数量,材料名:数量]: 材料と数量を指定して、必要な材料の総量を計算します。例: /materials 剛力の宝薬G2:9,魔匠の薬液:3
-   - /mathelp: 使用可能なコマンドのリストを表示します。
+The bot's configuration file, `config.json`, contains the following settings:
+- **EXCEL_FILE_PATH**: Path to the Excel file that contains crafting recipes.
+- **SPECIAL_ITEMS**: List of special items (e.g., crystals) to handle separately.
+- **DISCORD_BOT_TOKEN**: Your Discord bot token.
 
-
-## 依存関係
-   - discord.py ライブラリ: Discord APIとの通信に使用します。
-   - pandas ライブラリ: Excelファイルからデータを読み込むために使用します。
-   - openpyxl ライブラリ: Excelファイルの読み込みをサポートします。
-
-## インストール
-   - 必要なライブラリをインストールするには、次のコマンドを実行します:
-
-
-```bash
-pip install discord.py pandas openpyxl
-```
-
-## 注意事項
-   - ボットを使用するには、Discordでのボットの設定とトークンの取得が必要です。
-   - Excelファイルのパスと構成が正しいことを確認してください。
-
-## ライセンス
-このプロジェクトはMITライセンスのもとで提供されています。詳細は LICENSE ファイルを参照してください。
+## License
+This project is licensed under the MIT License.

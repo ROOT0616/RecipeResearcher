@@ -62,20 +62,20 @@ def calculate_materials(materials, df):
                 if '材料' in col:
                     material = row[col]
                     
-                    if isinstance(material, str):  # 文字列の場合のみ処理
+                    if isinstance(material, str):
                         material = material.strip()
                     elif pd.notna(material):
-                        material = str(material)  # 数値を文字列に変換
+                        material = str(material)
                     else:
-                        continue  # NaN や空白の場合はスキップ
+                        continue
                     
                     required_quantity = row[col.replace('材料', '必要数')]
-                    total_quantity = quantity * required_quantity
-                    recipe_count = math.ceil(total_quantity / completion_quantity)
+                    recipe_count = math.ceil(quantity / completion_quantity)
+                    total_needed = recipe_count * required_quantity
 
                     if material not in total_materials:
                         total_materials[material] = 0
-                    total_materials[material] += recipe_count * required_quantity
+                    total_materials[material] += total_needed
 
     final_materials = {}
     for material, qty in total_materials.items():
@@ -160,11 +160,11 @@ async def materials(interaction: discord.Interaction, materials: str):
         material_dict[key] = int(value)
     
     # 結果のフォーマット
-    materialss = ""
+    materials_list = ""
     for material, quantity in material_dict.items():
-        materialss += f"**{material}**  を  {quantity}個\n"
+        materials_list += f"{material}  を  {quantity}個\n"
 
-    result = f"{materialss}の必要な材料の総量:\n\n"
+    result = f"{materials_list}の必要な材料の総量:\n\n"
     
     for material, qty in other_materials.items():
         result += f"**{material}**  x  {int(qty)}\n"
@@ -175,19 +175,50 @@ async def materials(interaction: discord.Interaction, materials: str):
     
     await interaction.response.send_message(result)
 
+@bot.tree.command(name='search_item', description='Search for a crafting item and display its materials')
+@app_commands.describe(item_name='Name of the item to search for')
+async def search_item(interaction: discord.Interaction, item_name: str):
+    df = load_crafting_data()
+    if df.empty:
+        await interaction.response.send_message("エラー: Excelファイルを読み込む際に問題が発生しました。")
+        return
+
+    matching_items = df[df['完成品名'] == item_name]
+    
+    if not matching_items.empty:
+        # アイテムが見つかった場合、その材料と必要数を返す
+        response = f"アイテム '{item_name}' の材料リスト:\n"
+        for _, row in matching_items.iterrows():
+            response += f"  ・ {row['材料1']} x {int(row['必要数1'])}\n"
+            if pd.notna(row['材料2']):
+                response += f"  ・ {row['材料2']} x {int(row['必要数2'])}\n"
+            if pd.notna(row['材料3']):
+                response += f"  ・ {row['材料3']} x {int(row['必要数3'])}\n"
+            if pd.notna(row['材料4']):
+                response += f"  ・ {row['材料4']} x {int(row['必要数4'])}\n"
+            if pd.notna(row['材料5']):
+                response += f"  ・ {row['材料5']} x {int(row['必要数5'])}\n"
+            if pd.notna(row['材料6']):
+                response += f"  ・ {row['材料6']} x {int(row['必要数6'])}\n"
+            if pd.notna(row['材料7']):
+                response += f"  ・ {row['材料7']} x {int(row['必要数7'])}\n"
+            if pd.notna(row['材料8']):
+                response += f"  ・ {row['材料8']} x {int(row['必要数8'])}\n"
+    else:
+        # アイテムが見つからなかった場合、類似アイテムを提案
+        all_items = df['完成品名'].tolist()
+        similar_items = get_close_matches(item_name, all_items, n=10, cutoff=0.5)
+        response = f"アイテム '{item_name}' が見つかりませんでした。類似するアイテム:\n" + "\n".join(similar_items)
+
+    await interaction.response.send_message(response)
+
 @bot.tree.command(name='mathelp', description='Display the list of available commands')
 async def help_command(interaction: discord.Interaction):
     help_message = (
         "**RecipeResearcherBot Commands**\n"
         "/materials [材料名:数量,材料名:数量] - Calculate the total amount of materials needed.\n"
-        "例: /materials 剛力の宝薬G2:9,魔匠の薬液:3\n\n"
-        "このコマンドを使用すると、指定した材料の総量を計算し、結果を返します。\n"
-        "\n"
-        "**Terminal Commands**\n"
-        "reload_config - Reload the configuration file.\n"
-        "show_config - Display the current configuration.\n"
-        "update_config <new_config> - Update the configuration with the provided JSON.\n"
-        "exit - Exit the terminal command interface.\n"
+        "例: /materials 剛力の宝薬G2:9,魔匠の薬液:3\n"
+        "/search_item [アイテム名] - Search for a crafting item and display its materials.\n\n"
     )
     await interaction.response.send_message(help_message)
 
