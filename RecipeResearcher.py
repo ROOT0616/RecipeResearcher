@@ -39,8 +39,10 @@ def save_config(new_config):
 
 def load_crafting_data():
     try:
-        # Excelファイルを読み込み
-        df = pd.read_excel(EXCEL_FILE_PATH)
+        # Excelファイルのすべてのシートを読み込み
+        sheet_dict = pd.read_excel(EXCEL_FILE_PATH, sheet_name=None)
+        # シートごとのデータフレームを1つのデータフレームにまとめる
+        df = pd.concat(sheet_dict.values(), ignore_index=True)
         return df
     except Exception as e:
         logging.error(f"Excelファイルの読み込み中にエラーが発生しました: {e}")
