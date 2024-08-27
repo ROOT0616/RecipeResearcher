@@ -213,3 +213,164 @@ discord.app_commands.errors.CommandInvokeError: Command 'materials' raised an ex
 2024-08-26 18:00:45,661 - INFO - Shard ID None has connected to Gateway (Session ID: 64646f995ba14dc89e5b9302e3391ce3).
 2024-08-26 18:00:47,832 - INFO - ログインしました: レシピリサーチャーBot (814286584509104178)
 2024-08-26 18:02:22,875 - ERROR - 材料コマンドの形式エラー: invalid literal for int() with base 10: ''
+2024-08-27 14:31:05,290 - WARNING - PyNaCl is not installed, voice will NOT be supported
+2024-08-27 14:31:05,321 - INFO - 設定ファイルが再読み込みされました。
+2024-08-27 14:31:05,328 - INFO - logging in using static token
+2024-08-27 14:31:07,856 - INFO - Shard ID None has connected to Gateway (Session ID: 801828db55cb2e83ab1e3086d58105c3).
+2024-08-27 14:31:09,867 - INFO - ログインしました: レシピリサーチャーBot (814286584509104178)
+2024-08-27 14:31:34,226 - ERROR - Ignoring exception in command 'materials'
+Traceback (most recent call last):
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Prg\Python\RecipeResearcher\Enhanced_RecipeResearcher.py", line 137, in materials
+    total_materials, intermediate_materials = calculate_materials(materials_dict, df)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Prg\Python\RecipeResearcher\Enhanced_RecipeResearcher.py", line 66, in calculate_materials
+    material = row[col].strip()
+               ^^^^^^^^^^^^^^
+AttributeError: 'float' object has no attribute 'strip'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'materials' raised an exception: AttributeError: 'float' object has no attribute 'strip'
+2024-08-27 14:31:57,728 - ERROR - Ignoring exception in command 'materials'
+Traceback (most recent call last):
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Prg\Python\RecipeResearcher\Enhanced_RecipeResearcher.py", line 137, in materials
+    total_materials, intermediate_materials = calculate_materials(materials_dict, df)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Prg\Python\RecipeResearcher\Enhanced_RecipeResearcher.py", line 66, in calculate_materials
+    material = row[col].strip()
+               ^^^^^^^^^^^^^^
+AttributeError: 'float' object has no attribute 'strip'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'materials' raised an exception: AttributeError: 'float' object has no attribute 'strip'
+2024-08-27 14:32:46,865 - WARNING - PyNaCl is not installed, voice will NOT be supported
+2024-08-27 14:32:46,867 - INFO - 設定ファイルが再読み込みされました。
+2024-08-27 14:32:46,870 - INFO - logging in using static token
+2024-08-27 14:32:48,027 - INFO - Shard ID None has connected to Gateway (Session ID: 648b49c612b42a12b35a54b010879e06).
+2024-08-27 14:32:50,038 - INFO - ログインしました: レシピリサーチャーBot (814286584509104178)
+2024-08-27 14:32:52,086 - ERROR - Ignoring exception in command 'materials'
+Traceback (most recent call last):
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Prg\Python\RecipeResearcher\Enhanced_RecipeResearcher.py", line 146, in materials
+    total_materials, intermediate_materials = calculate_materials(materials_dict, df)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Prg\Python\RecipeResearcher\Enhanced_RecipeResearcher.py", line 92, in calculate_materials
+    for nested_material, nested_qty in nested_materials.items():
+                                       ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'tuple' object has no attribute 'items'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'materials' raised an exception: AttributeError: 'tuple' object has no attribute 'items'
+2024-08-27 14:35:35,792 - WARNING - PyNaCl is not installed, voice will NOT be supported
+2024-08-27 14:35:35,794 - INFO - 設定ファイルが再読み込みされました。
+2024-08-27 14:35:35,797 - INFO - logging in using static token
+2024-08-27 14:35:36,832 - INFO - Shard ID None has connected to Gateway (Session ID: 3c6bc55e834ededd3d44a615e7e1f284).
+2024-08-27 14:35:38,842 - INFO - ログインしました: レシピリサーチャーBot (814286584509104178)
+2024-08-27 14:35:52,603 - ERROR - Ignoring exception in command 'materials'
+Traceback (most recent call last):
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Prg\Python\RecipeResearcher\Enhanced_RecipeResearcher.py", line 150, in materials
+    total_materials, intermediate_materials = calculate_materials(materials_dict, df)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Prg\Python\RecipeResearcher\Enhanced_RecipeResearcher.py", line 90, in calculate_materials
+    for intermediate_item, intermediate_qty in intermediate_materials.items():
+RuntimeError: dictionary changed size during iteration
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'materials' raised an exception: RuntimeError: dictionary changed size during iteration
+2024-08-27 14:37:02,564 - ERROR - Ignoring exception in command 'materials'
+Traceback (most recent call last):
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Prg\Python\RecipeResearcher\Enhanced_RecipeResearcher.py", line 150, in materials
+    total_materials, intermediate_materials = calculate_materials(materials_dict, df)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Prg\Python\RecipeResearcher\Enhanced_RecipeResearcher.py", line 90, in calculate_materials
+    for intermediate_item, intermediate_qty in intermediate_materials.items():
+RuntimeError: dictionary changed size during iteration
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'materials' raised an exception: RuntimeError: dictionary changed size during iteration
+2024-08-27 14:37:25,926 - ERROR - Ignoring exception in command 'materials'
+Traceback (most recent call last):
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Prg\Python\RecipeResearcher\Enhanced_RecipeResearcher.py", line 150, in materials
+    total_materials, intermediate_materials = calculate_materials(materials_dict, df)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Prg\Python\RecipeResearcher\Enhanced_RecipeResearcher.py", line 90, in calculate_materials
+    for intermediate_item, intermediate_qty in intermediate_materials.items():
+RuntimeError: dictionary changed size during iteration
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matum\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'materials' raised an exception: RuntimeError: dictionary changed size during iteration
+2024-08-27 14:59:02,435 - WARNING - PyNaCl is not installed, voice will NOT be supported
+2024-08-27 14:59:02,436 - INFO - 設定ファイルが再読み込みされました。
+2024-08-27 14:59:02,440 - INFO - logging in using static token
+2024-08-27 14:59:03,643 - INFO - Shard ID None has connected to Gateway (Session ID: 0612c97f2410e2013aee8756a0b64712).
+2024-08-27 14:59:05,650 - INFO - ログインしました: レシピリサーチャーBot (814286584509104178)

@@ -50,6 +50,7 @@ def load_crafting_data():
 
 def calculate_materials(materials, df):
     total_materials = {}
+    intermediate_materials = {}
 
     for item, quantity in materials.items():
         item_data = df[df['完成品名'] == item]
@@ -58,41 +59,48 @@ def calculate_materials(materials, df):
             continue
 
         for _, row in item_data.iterrows():
-            completion_quantity = row['完成個数']  # 完成品の1回あたりの数
+            completion_quantity = row['完成個数']
 
             for col in df.columns:
                 if '材料' in col:
                     material = row[col]
-                    
+
+                    # 文字列である場合のみ strip() を実行
                     if isinstance(material, str):
                         material = material.strip()
-                    elif pd.notna(material):
+                    elif pd.notna(material):  # material が NaN でない場合は数値として扱う
                         material = str(material)
                     else:
                         continue
-                    
+
                     required_quantity = row[col.replace('材料', '必要数')]
                     recipe_count = math.ceil(quantity / completion_quantity)
                     total_needed = recipe_count * required_quantity
 
-                    if material not in total_materials:
-                        total_materials[material] = 0
-                    total_materials[material] += total_needed
+                    if material in df['完成品名'].values:  # 中間生成物の場合
+                        if material not in intermediate_materials:
+                            intermediate_materials[material] = 0
+                        intermediate_materials[material] += total_needed
+                    else:  # 最終材料の場合
+                        if material not in total_materials:
+                            total_materials[material] = 0
+                        total_materials[material] += total_needed
 
-    final_materials = {}
-    for material, qty in total_materials.items():
-        if material in df['完成品名'].values:
-            nested_materials = calculate_materials({material: qty}, df)
-            for nested_material, nested_qty in nested_materials.items():
-                if nested_material not in final_materials:
-                    final_materials[nested_material] = 0
-                final_materials[nested_material] += nested_qty
-        else:
-            if material not in final_materials:
-                final_materials[material] = 0
-            final_materials[material] += qty
+    # 辞書のコピーを作成して、それをループする
+    intermediate_materials_copy = intermediate_materials.copy()
+    
+    for intermediate_item, intermediate_qty in intermediate_materials_copy.items():
+        nested_materials, nested_intermediate_materials = calculate_materials({intermediate_item: intermediate_qty}, df)
+        for nested_material, nested_qty in nested_materials.items():
+            if nested_material not in total_materials:
+                total_materials[nested_material] = 0
+            total_materials[nested_material] += nested_qty
+        for nested_intermediate, nested_intermediate_qty in nested_intermediate_materials.items():
+            if nested_intermediate not in intermediate_materials:
+                intermediate_materials[nested_intermediate] = 0
+            intermediate_materials[nested_intermediate] += nested_intermediate_qty
 
-    return final_materials
+    return total_materials, intermediate_materials
 
 # Botの設定
 intents = discord.Intents.default()
@@ -109,14 +117,16 @@ async def on_ready():
 async def materials(interaction: discord.Interaction, materials: str):
     materials_dict = {}
     try:
+        # ユーザー入力を辞書に変換
         for arg in materials.split(','):
             item, qty = arg.split(':')
-            materials_dict[item] = int(qty)
+            materials_dict[item.strip()] = int(qty.strip())
     except Exception as e:
         await interaction.response.send_message("エラー: コマンドの形式が正しくありません。例: /materials 剛力の宝薬G2:9,魔匠の薬液:3")
         logging.error(f"材料コマンドの形式エラー: {e}")
         return
 
+    # データフレームを読み込む
     df = load_crafting_data()
     if df.empty:
         await interaction.response.send_message("エラー: Excelファイルを読み込む際に問題が発生しました。")
@@ -138,8 +148,9 @@ async def materials(interaction: discord.Interaction, materials: str):
             await interaction.response.send_message(suggestion_message)
             return
 
-    total_materials = calculate_materials(materials_dict, df)
-    
+    # 材料の計算
+    total_materials, intermediate_materials = calculate_materials(materials_dict, df)
+
     if not total_materials:
         await interaction.response.send_message("エラー: 指定された材料に基づくデータが見つかりませんでした。")
         return
@@ -148,33 +159,33 @@ async def materials(interaction: discord.Interaction, materials: str):
     other_materials = {material: qty for material, qty in total_materials.items() if material not in SPECIAL_ITEMS}
     special_materials = {material: qty for material, qty in total_materials.items() if material in SPECIAL_ITEMS}
 
-    # 文字列を行ごとに分割
-    lines = materials.split(',')
-
-    # 辞書を初期化
-    material_dict = {}
-    
-    # 各行を分解して辞書に追加
-    for line in lines:
-        # 空白を取り除き、':'で分割
-        key, value = line.strip().split(':')
-        # 辞書に追加
-        material_dict[key] = int(value)
-    
-    # 結果のフォーマット
+    # 入力された材料のリストをフォーマット
     materials_list = ""
-    for material, quantity in material_dict.items():
-        materials_list += f"{material}  を  {quantity}個\n"
+    for material, quantity in materials_dict.items():
+        materials_list += f"{material} を {quantity}個\n"
 
+    # 結果のフォーマット
     result = f"{materials_list}の必要な材料の総量:\n\n"
-    
+
+    # 中間生成物の表示
+    intermediate_message = "\n中間生成物:\n"
+    for material, qty in intermediate_materials.items():
+        intermediate_message += f"{material}  x  {int(qty)}\n"
+
+    # 中間生成物のメッセージ追加
+    result += intermediate_message
+
+    # 通常の材料の表示
+    result += "\nその他の材料:\n"
     for material, qty in other_materials.items():
         result += f"**{material}**  x  {int(qty)}\n"
 
+    # クリスタルなどの特定の材料の表示
     result += f"\n必要なクリスタルの総量:\n"
     for material, qty in special_materials.items():
         result += f"{material}  x  {int(qty)}\n"
-    
+
+    # メッセージの送信
     await interaction.response.send_message(result)
 
 @bot.tree.command(name='search_item', description='Search for a crafting item and display its materials')

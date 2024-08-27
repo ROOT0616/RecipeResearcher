@@ -1,4 +1,6 @@
+### 仕様書
 
+```markdown
 # RecipeResearcherBot 仕様書
 
 ## 概要
