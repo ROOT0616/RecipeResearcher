@@ -7,25 +7,51 @@ import json
 import logging
 from difflib import get_close_matches
 import threading
+import sys
+import os
 
 # ログ設定
-logging.basicConfig(filename='bot.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='bot.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # グローバル変数
 config = None
 EXCEL_FILE_PATH = None
 SPECIAL_ITEMS = None
 
+def log_config_changes(old_config, new_config):
+    for key in old_config:
+        if old_config[key] != new_config.get(key):
+            logging.info(f"設定が変更されました: {key}: {old_config[key]} -> {new_config.get(key)}")
+
 def load_config():
     global config, EXCEL_FILE_PATH, SPECIAL_ITEMS
+    default_config = {
+        "DISCORD_BOT_TOKEN": "YOUR_DEFAULT_TOKEN",
+        "EXCEL_FILE_PATH": "crafting_data.xlsx",
+        "SPECIAL_ITEMS": ["ファイアシャード", "アイスシャード", "ウィンドシャード", "アースシャード", "ライトニングシャード", "ウォーターシャード", "ファイアクリスタル", "アイスクリスタル", "ウィンドクリスタル", "アースクリスタル", "ライトニングクリスタル", "ウォータークリスタル", "ファイアクラスター", "アイスクラスター", "ウィンドクラスター", "アースクラスター", "ライトニングクラスター", "ウォータークラスター"]
+    }
+    
     try:
         with open('config.json', 'r', encoding='utf-8') as config_file:
             config = json.load(config_file)
-            EXCEL_FILE_PATH = config['EXCEL_FILE_PATH']
-            SPECIAL_ITEMS = config['SPECIAL_ITEMS']
-            logging.info("設定ファイルが再読み込みされました。")
+            EXCEL_FILE_PATH = config.get('EXCEL_FILE_PATH', default_config['EXCEL_FILE_PATH'])
+            SPECIAL_ITEMS = config.get('SPECIAL_ITEMS', default_config['SPECIAL_ITEMS'])
+            logging.info("設定ファイルが正常に読み込まれました。")
+    except FileNotFoundError:
+        logging.error("設定ファイルが見つかりません。デフォルト設定をロードします。")
+        config = default_config
+        EXCEL_FILE_PATH = default_config['EXCEL_FILE_PATH']
+        SPECIAL_ITEMS = default_config['SPECIAL_ITEMS']
+    except json.JSONDecodeError:
+        logging.error("設定ファイルが破損しています。デフォルト設定をロードします。")
+        config = default_config
+        EXCEL_FILE_PATH = default_config['EXCEL_FILE_PATH']
+        SPECIAL_ITEMS = default_config['SPECIAL_ITEMS']
     except Exception as e:
-        logging.error(f"設定ファイルの再読み込み中にエラーが発生しました: {e}")
+        logging.error(f"設定ファイルの読み込み中に不明なエラーが発生しました: {e}")
+        config = default_config
+        EXCEL_FILE_PATH = default_config['EXCEL_FILE_PATH']
+        SPECIAL_ITEMS = default_config['SPECIAL_ITEMS']
 
 def save_config(new_config):
     global config
@@ -36,6 +62,25 @@ def save_config(new_config):
             logging.info("設定ファイルが更新されました。")
     except Exception as e:
         logging.error(f"設定ファイルの更新中にエラーが発生しました: {e}")
+
+def reload_config():
+    global config
+    old_config = config.copy() if config else {}
+
+    try:
+        with open('config.json', 'r', encoding='utf-8') as config_file:
+            new_config = json.load(config_file)
+            log_config_changes(old_config, new_config)  # 設定の差異をログに記録
+            config.update(new_config)  # 設定を更新
+            EXCEL_FILE_PATH = config.get('EXCEL_FILE_PATH')
+            SPECIAL_ITEMS = config.get('SPECIAL_ITEMS')
+            logging.info("設定ファイルが再読み込みされました。")
+    except FileNotFoundError:
+        logging.error("設定ファイルが見つかりません。再読み込みできません。")
+    except json.JSONDecodeError:
+        logging.error("設定ファイルが破損しています。再読み込みできません。")
+    except Exception as e:
+        logging.error(f"設定ファイルの再読み込み中に不明なエラーが発生しました: {e}")
 
 def load_crafting_data():
     try:
@@ -240,8 +285,8 @@ def handle_terminal_commands():
         while True:
             command = input("コマンドを入力してください (reload_config, show_config, update_config <new_config>, exit): \n")
             if command.strip() == "reload_config":
-                load_config()
-                print(f"設定の読み込みなおしました。")
+                reload_config()  # 設定ファイルの再読み込み
+                print(f"設定が再読み込みされました。")
             elif command.strip() == "show_config":
                 print(json.dumps(config, indent=4, ensure_ascii=False))
             elif command.startswith("update_config"):
@@ -251,7 +296,8 @@ def handle_terminal_commands():
                 except Exception as e:
                     print(f"エラー: 設定の更新中に問題が発生しました - {e}")
             elif command.strip() == "exit":
-                break
+                print("プログラムを終了します。")
+                os._exit(0)  # プログラム全体を強制終了
             else:
                 print("無効なコマンドです。再度入力してください。")
     threading.Thread(target=terminal_commands, daemon=True).start()
