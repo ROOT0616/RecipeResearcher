@@ -374,3 +374,25 @@ discord.app_commands.errors.CommandInvokeError: Command 'materials' raised an ex
 2024-08-27 14:59:02,440 - INFO - logging in using static token
 2024-08-27 14:59:03,643 - INFO - Shard ID None has connected to Gateway (Session ID: 0612c97f2410e2013aee8756a0b64712).
 2024-08-27 14:59:05,650 - INFO - ログインしました: レシピリサーチャーBot (814286584509104178)
+2024-08-27 15:15:26,250 - WARNING - PyNaCl is not installed, voice will NOT be supported
+2024-08-27 15:15:26,251 - DEBUG - on_ready has successfully been registered as an event
+2024-08-27 15:15:26,256 - INFO - 設定ファイルが正常に読み込まれました。
+2024-08-27 15:15:26,258 - DEBUG - Using proactor: IocpProactor
+2024-08-27 15:15:26,260 - INFO - logging in using static token
+2024-08-27 15:15:27,388 - INFO - Shard ID None has connected to Gateway (Session ID: 01631f1a5d7d45d6a58f68be84943d25).
+2024-08-27 15:15:29,408 - INFO - ログインしました: レシピリサーチャーBot (814286584509104178)
+2024-08-27 15:15:46,521 - INFO - 設定ファイルが再読み込みされました。
+2024-08-27 15:18:00,730 - WARNING - PyNaCl is not installed, voice will NOT be supported
+2024-08-27 15:18:00,731 - DEBUG - on_ready has successfully been registered as an event
+2024-08-27 15:18:00,732 - INFO - 設定ファイルが正常に読み込まれました。
+2024-08-27 15:18:00,734 - DEBUG - Using proactor: IocpProactor
+2024-08-27 15:18:00,735 - INFO - logging in using static token
+2024-08-27 15:18:01,872 - INFO - Shard ID None has connected to Gateway (Session ID: 7e931568a64bd0e2cbba23972a57966b).
+2024-08-27 15:18:03,896 - INFO - ログインしました: レシピリサーチャーBot (814286584509104178)
+2024-08-27 15:19:38,858 - WARNING - PyNaCl is not installed, voice will NOT be supported
+2024-08-27 15:19:38,859 - DEBUG - on_ready has successfully been registered as an event
+2024-08-27 15:19:38,860 - INFO - 設定ファイルが正常に読み込まれました。
+2024-08-27 15:19:38,862 - DEBUG - Using proactor: IocpProactor
+2024-08-27 15:19:38,864 - INFO - logging in using static token
+2024-08-27 15:19:39,904 - INFO - Shard ID None has connected to Gateway (Session ID: a86b25d8e53b2c52309c9e0855c2f88a).
+2024-08-27 15:19:41,930 - INFO - ログインしました: レシピリサーチャーBot (814286584509104178)
